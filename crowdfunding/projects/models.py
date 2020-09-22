@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils import timezone
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
@@ -8,8 +9,8 @@ class Project(models.Model):
     image = models.URLField()
     is_open = models.BooleanField()
     date_created = models.DateTimeField()
-    date_end = models.DateTimeField()
-    total_raised = models.IntegerField()
+    date_end = models.DateTimeField(default=timezone.now())
+    total_raised = models.IntegerField(default=0)
     owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,

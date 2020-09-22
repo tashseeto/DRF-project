@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Project, Pledge
+from django.utils import timezone
 
 
 class PledgeSerializer(serializers.Serializer):
@@ -21,8 +22,8 @@ class ProjectSerializer(serializers.Serializer):
     image = serializers.URLField()
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
-    date_end = serializers.DateTimeField()
-    total_raised = serializers.IntegerField()
+    date_end = serializers.DateTimeField(default=timezone.now())
+    total_raised = serializers.IntegerField(default=0)
     owner = serializers.ReadOnlyField(source='owner.id')
 
     def create(self, validated_data):
