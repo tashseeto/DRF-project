@@ -9,8 +9,8 @@ class Project(models.Model):
     image = models.URLField()
     is_open = models.BooleanField()
     date_created = models.DateTimeField()
-    date_end = models.DateTimeField(default=timezone.now())
-    total_raised = models.IntegerField(default=0)
+    date_end = models.DateTimeField()
+    total_raised = models.IntegerField()
     owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,

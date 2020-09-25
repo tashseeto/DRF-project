@@ -23,11 +23,20 @@ class ProjectSerializer(serializers.Serializer):
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
     date_end = serializers.DateTimeField(default=timezone.now())
-    total_raised = serializers.IntegerField(default=0)
+    total_raised = serializers.SerializerMethodField()
     owner = serializers.ReadOnlyField(source='owner.id')
+
+    def get_total_raised(self, obj):
+        total_pledges = obj.pledges.all()
+        total = 0
+        for pledge in total_pledges:
+            total += pledge.amount
+        return total
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
+
+
 
 class ProjectDetailSerializer(ProjectSerializer):
     pledges = PledgeSerializer(many=True, read_only=True)
