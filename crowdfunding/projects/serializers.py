@@ -10,7 +10,7 @@ class PledgeSerializer(serializers.Serializer):
     comment = serializers.CharField(max_length=200)
     anonymous = serializers.BooleanField()
     supporter = serializers.ReadOnlyField(source='supporter.id')
-    date_created = serializers.DateTimeField(default=timezone.now())
+    date_created = serializers.DateTimeField()
     project_id = serializers.IntegerField()
 
     def create(self, validated_data):
