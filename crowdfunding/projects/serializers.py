@@ -22,7 +22,6 @@ class ProjectSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=None)
     goal = serializers.IntegerField()
     total_raised = serializers.SerializerMethodField()
-    num_supporters = serializers.IntegerField()
     image = serializers.URLField()
     is_open = serializers.SerializerMethodField()
     date_created = serializers.DateTimeField()
