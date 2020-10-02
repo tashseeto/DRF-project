@@ -25,7 +25,7 @@ class ProjectSerializer(serializers.Serializer):
     num_supporters = serializers.SerializerMethodField()
     image = serializers.URLField()
     is_open = serializers.SerializerMethodField()
-    date_created = serializers.DateTimeField(default=timezone.now())
+    date_created = serializers.DateTimeField()
     date_end = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
 
@@ -87,7 +87,3 @@ class PledgeDetailSerializer(PledgeSerializer):
             return instance
         else:
             return
-
-    
-        instance.save()
-        return instance
