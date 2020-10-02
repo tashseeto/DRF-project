@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Project, Pledge
+from django.utils import timezone
+from users.models import CustomUser
 
 
 class PledgeSerializer(serializers.Serializer):
@@ -7,7 +9,8 @@ class PledgeSerializer(serializers.Serializer):
     amount = serializers.IntegerField()
     comment = serializers.CharField(max_length=200)
     anonymous = serializers.BooleanField()
-    supporter_id = serializers.IntegerField()
+    supporter = serializers.ReadOnlyField(source='supporter.id')
+    date_created = serializers.DateTimeField()
     project_id = serializers.IntegerField()
 
     def create(self, validated_data):
@@ -18,13 +21,24 @@ class ProjectSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)
     description = serializers.CharField(max_length=None)
     goal = serializers.IntegerField()
+    total_raised = serializers.SerializerMethodField()
     image = serializers.URLField()
-    is_open = serializers.BooleanField()
+    is_open = serializers.SerializerMethodField()
     date_created = serializers.DateTimeField()
+    date_end = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
+
+    def get_total_raised(self, obj):
+        total_pledges = obj.pledges.all()
+        total = 0
+        for pledge in total_pledges:
+            total += pledge.amount
+        return total
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
+
+
 
 class ProjectDetailSerializer(ProjectSerializer):
     pledges = PledgeSerializer(many=True, read_only=True)
@@ -43,11 +57,14 @@ class ProjectDetailSerializer(ProjectSerializer):
 
 class PledgeDetailSerializer(PledgeSerializer):
     # where any additional fields go
-    pledges = PledgeSerializer(many=True, read_only=True)
+    project = ProjectSerializer(many=False, read_only=True)
+    amount = serializers.IntegerField()
 
     def update(self, instance, validated_data):
-        instance.amount = validated_data.get('amount', instance.amount)
-        instance.comment = validated_data.get('comment', instance.comment)
-        instance.anonymous = validated_data.get('anonymous', instance.anonymous)
-        instance.save()
-        return instance
+        new_amount = validated_data.get('amount', instance.amount)
+        if new_amount >= instance.amount:
+            instance.amount = new_amount
+            instance.save()
+            return instance
+        else:
+            return
