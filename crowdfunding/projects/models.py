@@ -7,10 +7,11 @@ class Project(models.Model):
     description = models.TextField()
     goal = models.IntegerField()
     total_raised = models.IntegerField()
+    num_supporters = models.IntegerField()
     image = models.URLField()
     is_open = models.BooleanField()
     date_created = models.DateTimeField(default=timezone.now())
-    date_end = models.DateTimeField(default=timezone.now())
+    date_end = models.DateTimeField()
     owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,

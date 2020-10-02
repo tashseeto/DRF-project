@@ -22,6 +22,7 @@ class ProjectSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=None)
     goal = serializers.IntegerField()
     total_raised = serializers.SerializerMethodField()
+    num_supporters = serializers.IntegerField()
     image = serializers.URLField()
     is_open = serializers.SerializerMethodField()
     date_created = serializers.DateTimeField()
@@ -34,13 +35,6 @@ class ProjectSerializer(serializers.Serializer):
         for pledge in total_pledges:
             total += pledge.amount
         return total
-
-    def get_is_open(self,obj):
-        if timezone.now() > obj.date_end:
-            is_open = False
-        else:
-            is_open = True
-        return is_open
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
