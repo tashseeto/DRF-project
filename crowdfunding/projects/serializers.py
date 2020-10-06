@@ -22,6 +22,7 @@ class ProjectSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=None)
     goal = serializers.IntegerField()
     total_raised = serializers.SerializerMethodField()
+    num_supporters = serializers.SerializerMethodField()
     image = serializers.URLField()
     is_open = serializers.SerializerMethodField()
     date_created = serializers.DateTimeField()
@@ -34,6 +35,24 @@ class ProjectSerializer(serializers.Serializer):
         for pledge in total_pledges:
             total += pledge.amount
         return total
+
+    def get_num_supporters(self,obj):
+        filtered_supporters = []
+        total_supporters = obj.pledges.all()
+        for supporters in total_supporters:
+            temp_supporter = supporters.supporter
+            if temp_supporter in filtered_supporters:
+                pass
+            else:
+                filtered_supporters.append(temp_supporter)
+        return len(filtered_supporters)
+
+    def get_is_open(self, obj):
+        if timezone.now() > obj.date_end:
+            is_open = False
+        else:
+            is_open = True
+        return is_open
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
@@ -51,7 +70,6 @@ class ProjectDetailSerializer(ProjectSerializer):
         instance.is_open = validated_data.get('is_open', instance.is_open)
         instance.date_created = validated_data.get('date_created', instance.date_created)
         instance.owner = validated_data.get('owner', instance.owner)
-        # instance.owner = instance.owner
         instance.save()
         return instance
 
