@@ -23,7 +23,7 @@ class ProjectSerializer(serializers.Serializer):
     goal = serializers.IntegerField()
     total_raised = serializers.SerializerMethodField()
     image = serializers.URLField()
-    date_created = serializers.DateTimeField(default=timezone.now())
+    date_created = serializers.DateTimeField()
     date_end = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
 

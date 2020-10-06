@@ -8,8 +8,8 @@ class Project(models.Model):
     goal = models.IntegerField()
     total_raised = models.IntegerField(default=0)
     image = models.URLField()
-    date_created = models.DateTimeField()
-    date_end = models.DateTimeField()
+    date_created = models.DateTimeField(default=timezone.now())
+    date_end = models.DateTimeField(default=timezone.now())
     owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
