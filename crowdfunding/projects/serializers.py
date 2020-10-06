@@ -10,7 +10,7 @@ class PledgeSerializer(serializers.Serializer):
     comment = serializers.CharField(max_length=200)
     anonymous = serializers.BooleanField()
     supporter = serializers.ReadOnlyField(source='supporter.id')
-    date_created = serializers.DateTimeField()
+    date_created = serializers.DateTimeField(default=timezone.now())
     project_id = serializers.IntegerField()
 
     def create(self, validated_data):
@@ -23,8 +23,7 @@ class ProjectSerializer(serializers.Serializer):
     goal = serializers.IntegerField()
     total_raised = serializers.SerializerMethodField()
     image = serializers.URLField()
-    is_open = serializers.SerializerMethodField()
-    date_created = serializers.DateTimeField()
+    date_created = serializers.DateTimeField(default=timezone.now())
     date_end = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
 
@@ -35,6 +34,20 @@ class ProjectSerializer(serializers.Serializer):
             total += pledge.amount
         return total
 
+<<<<<<< Updated upstream
+=======
+    def get_num_supporters(self,obj):
+        filtered_supporters = []
+        total_supporters = obj.pledges.all()
+        for supporters in total_supporters:
+            temp_supporter = supporters.supporter
+            if temp_supporter in filtered_supporters:
+                pass
+            else:
+                filtered_supporters.append(temp_supporter)
+        return len(filtered_supporters)
+
+>>>>>>> Stashed changes
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
 
@@ -48,7 +61,6 @@ class ProjectDetailSerializer(ProjectSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.goal = validated_data.get('goal', instance.goal)
         instance.image = validated_data.get('image', instance.image)
-        instance.is_open = validated_data.get('is_open', instance.is_open)
         instance.date_created = validated_data.get('date_created', instance.date_created)
         instance.owner = validated_data.get('owner', instance.owner)
         # instance.owner = instance.owner
