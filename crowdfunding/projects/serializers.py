@@ -34,8 +34,6 @@ class ProjectSerializer(serializers.Serializer):
             total += pledge.amount
         return total
 
-<<<<<<< Updated upstream
-=======
     def get_num_supporters(self,obj):
         filtered_supporters = []
         total_supporters = obj.pledges.all()
@@ -47,7 +45,6 @@ class ProjectSerializer(serializers.Serializer):
                 filtered_supporters.append(temp_supporter)
         return len(filtered_supporters)
 
->>>>>>> Stashed changes
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
 
