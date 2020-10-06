@@ -7,7 +7,9 @@ class Project(models.Model):
     description = models.TextField()
     goal = models.IntegerField()
     total_raised = models.IntegerField(default=0)
+    num_suppoters = models.IntegerField(default=0)
     image = models.URLField()
+    is_open = models.BooleanField()
     date_created = models.DateTimeField(default=timezone.now())
     date_end = models.DateTimeField(default=timezone.now())
     owner = models.ForeignKey(

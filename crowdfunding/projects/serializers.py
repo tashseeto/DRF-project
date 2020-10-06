@@ -22,7 +22,9 @@ class ProjectSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=None)
     goal = serializers.IntegerField()
     total_raised = serializers.SerializerMethodField()
+    num_supporters = serializers.SerializerMethodField()
     image = serializers.URLField()
+    is_open = serializers.SerializerMethodField()
     date_created = serializers.DateTimeField()
     date_end = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
@@ -44,6 +46,13 @@ class ProjectSerializer(serializers.Serializer):
             else:
                 filtered_supporters.append(temp_supporter)
         return len(filtered_supporters)
+
+    def get_is_open(self, obj):
+        if timezone.now() > obj.date_end:
+            is_open = False
+        else:
+            is_open = True
+        return is_open
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
