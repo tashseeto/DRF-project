@@ -11,7 +11,7 @@ class CustomUserSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=200)
     last_name = serializers.CharField(max_length=200)
     image = serializers.URLField()
-    date_joined = serializers.DateTimeField()
+    date_joined = serializers.DateTimeField(read_only=True)
     project_owner = serializers.BooleanField()
 
     def create(self, validated_data):
